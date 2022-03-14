@@ -1,0 +1,14 @@
+#!/bin/sh
+# Module defaults
+MODULE_NAME="module"
+NAME="Module"
+CATEGORY=""
+SUMMARY=""
+DESCRIPTION=""
+VERSION="1.0"
+WEBSITE=""
+AUTHOR=""
+LICENSE="LGPL-3"
+APPLICATION=False
+INSTALLABLE=True
+DEPENDS=""
