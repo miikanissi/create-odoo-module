@@ -1,6 +1,7 @@
 #!/bin/sh
-# by Miika Nissi - https://miikanissi.com - https://github.com/miikanissi
 # odoo-create-module - https://github.com/miikanissi/create-odoo-module
+# by Miika Nissi - https://miikanissi.com - https://github.com/miikanissi
+# Part of odoo-create-module. See LICENSE file for full copyright and licensing details.
 
 # Set version number
 version="1.0"
@@ -32,9 +33,9 @@ esac done
 # Validate <module_directory>
 module_directory="$1"
 if [ -z "$module_directory" ]; then
-  usage && exit 1;
+  printf "Please specify the module directory:\\n  create-odoo-module <module-directory>\\n\\nFor example:\\n  create-odoo-module my_odoo_module\\n\\nRun create-odoo-module -h to see all the options.\n" && exit 1;
 elif printf "%s" "$module_directory" | grep -Eqv '^[a-z0-9_]+$'; then
-    printf "Sorry, <module-directory> can only contain URL-friendly characters with no leading or trailing spaces and no capital letters or hyphens.\\n\\n" && usage && exit 1;
+    printf "Sorry, <module-directory> can only contain URL-friendly characters with no leading or trailing spaces and no capital letters or hyphens.\\n\\nRun create-odoo-module -h to see all the options.\n" && exit 1;
 fi
 
 # Print utility information
