@@ -10,7 +10,7 @@ version="1.0"
 dir=$(CDPATH="" cd -- "$(dirname -- "$0")" && pwd -P)
 
 # Source defaults
-# shellcheck source=./config.shlib
+# shellcheck source=config.shlib
 . "$dir"/config.shlib
 
 # Print usage information
