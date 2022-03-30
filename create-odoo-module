@@ -10,7 +10,7 @@ version="1.0"
 dir=$(CDPATH="" cd -- "$(dirname -- "$0")" && pwd -P)
 
 # Source defaults
-# shellcheck source=./defaults
+# shellcheck source=./config.shlib
 . "$dir"/config.shlib
 
 # Print usage information
@@ -41,14 +41,14 @@ fi
 # Print utility information
 printf -- "This utility will walk you through creating an Odoo module.\\nIt only covers the most common items, and tries to guess sensible defaults.\\n\\nSee \`create-odoo-module -h\` for definitive documentation on these fields and exactly what they do.\\n\\nPress ^C at any time to quit.\\n"
 
-# Get module name
+# Get name
 printf -- "name: (%s) " "$(config_get NAME)"
 read -r name
 if [ -z "$name" ]; then
   name="$(config_get NAME)"
 fi
 
-# Get and validate module version
+# Get and validate version
 while true; do
   printf -- "version: (%s) " "$(config_get VERSION)"
   read -r version
@@ -65,21 +65,28 @@ while true; do
   fi
 done
 
-# Get module summary
+# Get category
+printf -- "category: (%s) " "$(config_get CATEGORY)"
+read -r category
+if [ -z "$category" ]; then
+  summary="$(config_get CATEGORY)"
+fi
+
+# Get summary
 printf -- "summary: (%s) " "$(config_get SUMMARY)"
 read -r summary
 if [ -z "$summary" ]; then
   summary="$(config_get SUMMARY)"
 fi
 
-# Get module description
+# Get description
 printf -- "description: (%s) " "$(config_get DESCRIPTION)"
 read -r description
 if [ -z "$description" ]; then
   description="$(config_get DESCRIPTION)"
 fi
 
-# Get and validate module website
+# Get and validate website
 while true; do
   printf -- "website: (%s) " "$(config_get WEBSITE)"
   read -r website
@@ -96,14 +103,14 @@ while true; do
   fi
 done
 
-# Get module author
+# Get author
 printf -- "author: (%s) " "$(config_get AUTHOR)"
 read -r author
 if [ -z "$author" ]; then
   author="$(config_get AUTHOR)"
 fi
 
-# Get module license
+# Get license
 printf -- "license: (%s) " "$(config_get LICENSE)"
 read -r license
 if [ -z "$license" ]; then
@@ -126,3 +133,54 @@ while true; do
     continue
   fi
 done
+
+# Get data
+while true; do
+  printf -- "data: (%s) " "$(config_get DATA)"
+  read -r data
+  if [ -z "$data" ]; then
+    depends="$(config_get DATA)"
+  fi
+  if [ -z "$data" ]; then
+    break
+  elif printf -- "%s" "$data" | grep -Eq '^[a-z0-9/_.,]*$'; then
+    break
+  else
+    printf -- "Sorry, \`data\` has to be a comma separated list of file locations, which can only contain URL-friendly characters with no leading or trailing spaces and no capital letters or hyphens.\\n\\nRun create-odoo-module -h to see all the options.\n"
+    continue
+  fi
+done
+
+# create directories
+mkdir -p "$module_directory"
+mkdir -p "$module_directory"/static/description
+# create files
+touch "$module_directory"/__init__.py
+looper="$data"
+while true; do
+  x="${looper%%,*}"
+  dirname="${x%/*}"
+  mkdir -p "$module_directory"/"$dirname"
+  touch "$module_directory"/"$x"
+  if [ -z "${looper##*,*}" ]  &&  [ -n "${looper}" ]; then
+    looper="${looper#*,}"
+  else
+    break
+  fi
+done
+# format comma-separated lists
+depends=$(printf -- "%s" "$depends" | sed 's/[^,]*/"&"/g' | sed 's/, */, /g')
+data=$(printf -- "%s" "$data" | sed 's/[^,]*/"&"/g' | sed 's/, */, /g')
+# export variables
+export name
+export version
+export category
+export summary
+export description
+export website
+export author
+export license
+export depends
+export data
+# render templates
+envsubst < "$dir"/templates/__manifest__.py > "$module_directory"/__manifest__.py
