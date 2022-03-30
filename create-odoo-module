@@ -11,118 +11,118 @@ dir=$(CDPATH="" cd -- "$(dirname -- "$0")" && pwd -P)
 
 # Source defaults
 # shellcheck source=./defaults
-. "$dir"/defaults
+. "$dir"/config.shlib
 
 # Print usage information
 usage(){
-  printf "Usage: create-odoo-module <module-directory> [options]\\nOptions:\\n  -v: output the version number\\n  -h: output usage information\\n"
+  printf -- "Usage: create-odoo-module <module-directory> [options]\\nOptions:\\n  -v: output the version number\\n  -h: output usage information\\n"
 }
 
 # Print version information
 version(){
-  printf "%s\\n" "$version"
+  printf -- "%s\\n" "$version"
 }
 
 # Get option parameters
 while getopts "vh" FLAG; do case "$FLAG" in
   h) usage && exit 1;;
   v) version && exit 1;;
-  ?) printf " -h: To show help\\n" && exit 1 ;;
+  ?) printf -- " -h: To show help\\n" && exit 1 ;;
 esac done
 
 # Validate <module_directory>
 module_directory="$1"
 if [ -z "$module_directory" ]; then
-  printf "Please specify the module directory:\\n  create-odoo-module <module-directory>\\n\\nFor example:\\n  create-odoo-module my_odoo_module\\n\\nRun create-odoo-module -h to see all the options.\n" && exit 1;
-elif printf "%s" "$module_directory" | grep -Eqv '^[a-z0-9_]+$'; then
-    printf "Sorry, <module-directory> can only contain URL-friendly characters with no leading or trailing spaces and no capital letters or hyphens.\\n\\nRun create-odoo-module -h to see all the options.\n" && exit 1;
+  printf -- "Please specify the module directory:\\n  create-odoo-module <module-directory>\\n\\nFor example:\\n  create-odoo-module my_odoo_module\\n\\nRun create-odoo-module -h to see all the options.\n" && exit 1;
+elif printf -- "%s" "$module_directory" | grep -Eqv '^[a-z0-9_]+$'; then
+    printf -- "Sorry, <module-directory> can only contain URL-friendly characters with no leading or trailing spaces and no capital letters or hyphens.\\n\\nRun create-odoo-module -h to see all the options.\n" && exit 1;
 fi
 
 # Print utility information
-printf "This utility will walk you through creating an Odoo module.\\nIt only covers the most common items, and tries to guess sensible defaults.\\n\\nSee \`create-odoo-module -h\` for definitive documentation on these fields and exactly what they do.\\n\\nPress ^C at any time to quit.\\n"
+printf -- "This utility will walk you through creating an Odoo module.\\nIt only covers the most common items, and tries to guess sensible defaults.\\n\\nSee \`create-odoo-module -h\` for definitive documentation on these fields and exactly what they do.\\n\\nPress ^C at any time to quit.\\n"
 
 # Get module name
-printf "name: (%s) " "$NAME"
+printf -- "name: (%s) " "$(config_get NAME)"
 read -r name
 if [ -z "$name" ]; then
-  name="$NAME"
+  name="$(config_get NAME)"
 fi
 
 # Get and validate module version
 while true; do
-  printf "version: (%s) " "$VERSION"
+  printf -- "version: (%s) " "$(config_get VERSION)"
   read -r version
   if [ -z "$version" ]; then
-    version="$VERSION"
+    version="$(config_get VERSION)"
   fi
   if [ -z "$version" ]; then
     break
-  elif printf "%s" "$version" | grep -Eq '^([1-9][0-9]*)(\.(([1-9][0-9]*)|0)){0,4}$'; then
+  elif printf -- "%s" "$version" | grep -Eq '^([1-9][0-9]*)(\.(([1-9][0-9]*)|0)){0,4}$'; then
     break
   else
-    printf "Invalid version: %s\n" "$version"
+    printf -- "Invalid version: %s\n" "$version"
     continue
   fi
 done
 
 # Get module summary
-printf "summary: (%s) " "$SUMMARY"
+printf -- "summary: (%s) " "$(config_get SUMMARY)"
 read -r summary
 if [ -z "$summary" ]; then
-  summary="$SUMMARY"
+  summary="$(config_get SUMMARY)"
 fi
 
 # Get module description
-printf "description: (%s) " "$DESCRIPTION"
+printf -- "description: (%s) " "$(config_get DESCRIPTION)"
 read -r description
 if [ -z "$description" ]; then
-  description="$DESCRIPTION"
+  description="$(config_get DESCRIPTION)"
 fi
 
 # Get and validate module website
 while true; do
-  printf "website: (%s) " "$WEBSITE"
+  printf -- "website: (%s) " "$(config_get WEBSITE)"
   read -r website
   if [ -z "$website" ]; then
-    website="$WEBSITE"
+    website="$(config_get WEBSITE)"
   fi
   if [ -z "$website" ]; then
     break
-  elif printf "%s" "$website" | grep -Eq '(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'; then
+  elif printf -- "%s" "$website" | grep -Eq '(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'; then
     break
   else
-    printf "Invalid url: %s\n" "$website"
+    printf -- "Invalid url: %s\n" "$website"
     continue
   fi
 done
 
 # Get module author
-printf "author: (%s) " "$AUTHOR"
+printf -- "author: (%s) " "$(config_get AUTHOR)"
 read -r author
 if [ -z "$author" ]; then
-  author="$AUTHOR"
+  author="$(config_get AUTHOR)"
 fi
 
 # Get module license
-printf "license: (%s) " "$LICENSE"
+printf -- "license: (%s) " "$(config_get LICENSE)"
 read -r license
 if [ -z "$license" ]; then
-  license="$LICENSE"
+  license="$(config_get LICENSE)"
 fi
 
 # Get depends
 while true; do
-  printf "depends: (%s) " "$DEPENDS"
+  printf -- "depends: (%s) " "$(config_get DEPENDS)"
   read -r depends
   if [ -z "$depends" ]; then
-    depends="$DEPENDS"
+    depends="$(config_get DEPENDS)"
   fi
   if [ -z "$depends" ]; then
     break
-  elif printf "%s" "$depends" | grep -Eq '^[a-z0-9_,]*$'; then
+  elif printf -- "%s" "$depends" | grep -Eq '^[a-z0-9_,]*$'; then
     break
   else
-    printf "Sorry, \`depends\` has to be a comma separated list of module directories, which can only contain URL-friendly characters with no leading or trailing spaces and no capital letters or hyphens.\\n\\nRun create-odoo-module -h to see all the options.\n"
+    printf -- "Sorry, \`depends\` has to be a comma separated list of module directories, which can only contain URL-friendly characters with no leading or trailing spaces and no capital letters or hyphens.\\n\\nRun create-odoo-module -h to see all the options.\n"
     continue
   fi
 done

@@ -1,0 +1,11 @@
+config_read_file() {
+    (grep -E "^${2}=" -m 1 "${1}" 2>/dev/null || echo "VAR=") | head -n 1 | cut -d '=' -f 2-;
+}
+
+config_get() {
+    val="$(config_read_file .create-odoo-modulerc "${1}")";
+    if [ "${val}" = "" ]; then
+        val="$(config_read_file .create-odoo-modulerc.defaults "${1}")";
+    fi
+    printf -- "%s" "${val}";
+}
