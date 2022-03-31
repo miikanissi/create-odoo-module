@@ -16,6 +16,8 @@ cd create-odoo-module
 ln -sr create-odoo-module /usr/local/bin
 ```
 
+Create Odoo Module requires no additional dependencies on top of GNU Core Utilities or other similar utilities on macOS and BSD.
+
 ### Set Up
 
 Values used by `create-odoo-module` can be defined in a `.create-odoo-modulerc` file located in the base directory where the program is run. If no `.create-odoo-modulerc` file exists, the default values from the program directory `.create-odoo-modulerc.defaults` file will be used.
@@ -60,6 +62,11 @@ create-odoo-module my_module
 ```
 
 It will prompt for the user defined variables. To keep the default value for a variable, you may press the return key.
+
+<p align='center'>
+  <img src='./docs/create-odoo-module.gif' width='600' alt='create-odoo-module my_module'>
+</p>
+
 After completing the prompts, it will create a directory called `my_module` inside the current folder.
 Inside that directory, it will generate the module structure using the defined values:
 
@@ -77,4 +84,23 @@ my_module
     └── templates.xml
 
 4 directories, 6 files
+```
+
+The `__manifest__.py` file is also generated using the defined values:
+
+```py
+{
+    "name": "My Module",
+    "version": "15.0.1.0.0",
+    "category": "Website",
+    "summary": "This is My Module",
+    "description": "My Module is an example module created using create-odoo-module",
+    "website": "https://github.com/miikanissi/create-odoo-module",
+    "author": "Miika Nissi",
+    "license": "LGPL-3",
+    "application": False,
+    "installable": True,
+    "depends": ["website", "website_sale"],
+    "data": ["data/ir_cron.xml", "views/res_config_settings.xml", "views/templates.xml"],
+}
 ```
