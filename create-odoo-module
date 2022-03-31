@@ -7,8 +7,17 @@
 version="1.0"
 
 # Get file location
-dir=$(CDPATH="" cd -- "$(dirname -- "$0")" && pwd -P)
-
+self=$(
+    self=${0}
+    while [ -L "${self}" ]
+    do
+        cd "${self%/*}" || exit 1
+        self=$(readlink "${self}")
+    done
+    cd "${self%/*}" || exit 1
+    echo "$(pwd -P)/${self##*/}"
+)
+dir=$(dirname -- "$self")
 # Source defaults
 # shellcheck source=config.shlib
 . "$dir"/config.shlib
@@ -154,8 +163,10 @@ done
 # create directories
 mkdir -p "$module_directory"
 mkdir -p "$module_directory"/static/description
-# create files
+
+# create files and file directories
 touch "$module_directory"/__init__.py
+cp "$dir"/templates/icon.png "$module_directory"/static/description/
 looper="$data"
 while true; do
   x="${looper%%,*}"
@@ -168,9 +179,11 @@ while true; do
     break
   fi
 done
+
 # format comma-separated lists
 depends=$(printf -- "%s" "$depends" | sed 's/[^,]*/"&"/g' | sed 's/, */, /g')
 data=$(printf -- "%s" "$data" | sed 's/[^,]*/"&"/g' | sed 's/, */, /g')
+
 # export variables
 export name
 export version
@@ -182,5 +195,6 @@ export author
 export license
 export depends
 export data
+
 # render templates
 envsubst < "$dir"/templates/__manifest__.py > "$module_directory"/__manifest__.py
