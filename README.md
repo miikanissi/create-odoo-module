@@ -88,7 +88,7 @@ my_module
 
 The `__manifest__.py` file is also generated using the defined values:
 
-```py
+```python
 {
     "name": "My Module",
     "version": "15.0.1.0.0",
@@ -104,3 +104,7 @@ The `__manifest__.py` file is also generated using the defined values:
     "data": ["data/ir_cron.xml", "views/res_config_settings.xml", "views/templates.xml"],
 }
 ```
+
+## License
+
+Create Odoo Module is free software [licensed as LGPL-3](./LICENSE).
