@@ -3,7 +3,6 @@
     "version": "$version",
     "category": "$category",
     "summary": "$summary",
-    "description": "$description",
     "website": "$website",
     "author": "$author",
     "license": "$license",
