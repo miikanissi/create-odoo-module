@@ -30,7 +30,6 @@ The following variables can be set in the `.create-odoo-modulerc` file:
 | VERSION                 | Version number of the module                                  |
 | CATEGORY                | Category of the module                                        |
 | SUMMARY                 | Short one line summary of the module                          |
-| DESCRIPTION             | Longer description of the module                              |
 | WEBSITE                 | Website of the module author or repository                    |
 | AUTHOR                  | Author of the module                                          |
 | LICENSE                 | License used for the module                                   |
@@ -45,7 +44,6 @@ NAME=Module
 VERSION=1.0
 CATEGORY=
 SUMMARY=
-DESCRIPTION=
 WEBSITE=
 AUTHOR=
 LICENSE=LGPL-3
@@ -94,7 +92,6 @@ The `__manifest__.py` file is also generated using the defined values:
     "version": "15.0.1.0.0",
     "category": "Website",
     "summary": "This is My Module",
-    "description": "My Module is an example module created using create-odoo-module",
     "website": "https://github.com/miikanissi/create-odoo-module",
     "author": "Miika Nissi",
     "license": "LGPL-3",
