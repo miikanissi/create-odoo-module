@@ -88,13 +88,6 @@ if [ -z "$summary" ]; then
   summary="$(config_get SUMMARY)"
 fi
 
-# Get description
-printf -- "description: (%s) " "$(config_get DESCRIPTION)"
-read -r description
-if [ -z "$description" ]; then
-  description="$(config_get DESCRIPTION)"
-fi
-
 # Get and validate website
 while true; do
   printf -- "website: (%s) " "$(config_get WEBSITE)"
@@ -148,7 +141,7 @@ while true; do
   printf -- "data: (%s) " "$(config_get DATA)"
   read -r data
   if [ -z "$data" ]; then
-    depends="$(config_get DATA)"
+    data="$(config_get DATA)"
   fi
   if [ -z "$data" ]; then
     break
@@ -189,7 +182,6 @@ export name
 export version
 export category
 export summary
-export description
 export website
 export author
 export license
